@@ -122,7 +122,7 @@ public class PlayerTargeting : MonoBehaviour
         if(getATarget && !JoystickMovement.instance.isPlayerMoving && MonsterList.Count != 0)
         {
             transform.LookAt(MonsterList[targetIndex].transform.GetChild(0));
-            Attack();
+            //Attack();
             PlayerController.instance.animator.SetBool("Shot", true) ;
             PlayerController.instance.animator.SetBool("Run", false);
         }

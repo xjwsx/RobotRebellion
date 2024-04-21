@@ -40,9 +40,6 @@ public class JoystickMovement : MonoBehaviour
         bigStick.transform.position = Input.mousePosition;
         smallStick.transform.position = Input.mousePosition;
         stickFirstPosition = Input.mousePosition;
-        PlayerController.instance.animator.SetBool("Shot", false);
-        PlayerController.instance.animator.SetBool("Run", true);
-        isPlayerMoving = true;
         PlayerTargeting.instance.getATarget = false;
     }
 
@@ -52,8 +49,11 @@ public class JoystickMovement : MonoBehaviour
         Vector3 DragPosition = pointerEventData.position;
         joyVec = (DragPosition - stickFirstPosition).normalized;
         float stickDistance = Vector3.Distance(DragPosition, stickFirstPosition);
+        PlayerController.instance.animator.SetBool("Shot", false);
+        PlayerController.instance.animator.SetBool("Run", true);
+        isPlayerMoving = true;
 
-        if(stickDistance < stickRadius)
+        if (stickDistance < stickRadius)
         {
             smallStick.transform.position = stickFirstPosition + joyVec * stickDistance;
         }

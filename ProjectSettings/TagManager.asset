@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - NextStage
+  - Monster
+  - bullet
+  - Stage
   layers:
   - Default
   - TransparentFX

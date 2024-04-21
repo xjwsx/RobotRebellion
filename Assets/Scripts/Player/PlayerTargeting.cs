@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerTargeting : MonoBehaviour
 {
     public static PlayerTargeting instance;
+    private ObjectPoolManager pool;
 
     public bool getATarget = false;
     private int closeDistIndex = 0; //가장 가까운 인덱스
@@ -17,7 +18,7 @@ public class PlayerTargeting : MonoBehaviour
 
     public LayerMask layerMask;
     public List<GameObject> MonsterList = new List<GameObject>();
-    public GameObject bullet;
+    public float bulletSpeed = 10f;
     public Transform attackPoint;
 
     private void Awake()
@@ -25,6 +26,7 @@ public class PlayerTargeting : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            pool = ObjectPoolManager.instance;
         }
         else if (instance != this)
         {
@@ -66,7 +68,15 @@ public class PlayerTargeting : MonoBehaviour
     public void Attack()
     {
         PlayerController.instance.animator.SetBool("Shot", true);
-        Instantiate(bullet, attackPoint.position, transform.rotation);
+        GameObject obj = pool.SqawnFromPool("bullet");
+        obj.SetActive(true);
+        Shoot(obj);
+    }
+    public void Shoot(GameObject obj)
+    {
+        obj.transform.position = attackPoint.position;
+        obj.transform.rotation = Quaternion.identity;
+        obj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;
     }
     public void SetTarget()
     {

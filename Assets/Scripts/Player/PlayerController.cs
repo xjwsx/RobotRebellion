@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody rb;
     public Animator animator;
-    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private float moveSpeed = 5f;
 
     private void Awake()
     {
@@ -47,6 +47,22 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("NextStage"))
         {
             StageManager.instance.NextStage();
+        }
+
+        if(other.transform.CompareTag("HpBooster"))
+        {
+            PlayerHpBar.instance.GetHpBoost();
+            Destroy(other.gameObject);
+        }
+        if (other.transform.CompareTag("MeleeAtk"))
+        {
+            other.transform.parent.GetComponent<EnemyController>().meleeAtkArea.SetActive(false);
+            PlayerHpBar.instance.currenHp -= other.transform.parent.GetComponent<EnemyController>().damage * 2f;
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Dmg"))
+            {
+                animator.SetTrigger("Dmg");
+                Instantiate(EffectSet.instance.playerDmgEffect, PlayerTargeting.instance.attackPoint.position, Quaternion.Euler(90, 0, 0));
+            }
         }
     }
 }

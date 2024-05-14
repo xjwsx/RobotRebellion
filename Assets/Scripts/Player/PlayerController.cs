@@ -4,43 +4,38 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController instance;
+    [field: Header("References")]
+    [field: SerializeField] public PlayerSO Data { get; private set; }
 
-    Rigidbody rb;
-    public Animator animator;
-    [SerializeField] private float moveSpeed = 5f;
+    [field: Header("Animations")]
+    [field: SerializeField] public PlayerAnimationData AnimationData { get; private set; }
+    public PlayerTargeting PlayerTargeting { get; private set; }
+    public Rigidbody Rigidbody { get; private set; }
+    public Animator Animator { get; private set; }
+    public PlayerHpBar PlayerHpBar { get; private set; }
+    public HealthSystem HealthSystem { get; private set; }
+    private PlayerStateMachine stateMachine;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
+        AnimationData.Initialize();
+
+        PlayerTargeting = GetComponent<PlayerTargeting>();
+        Rigidbody = GetComponent<Rigidbody>();
+        Animator = GetComponent<Animator>();
+        HealthSystem = GetComponent<HealthSystem>();
+        HealthSystem.SetUp(Data.MaxHp);
+        stateMachine = new PlayerStateMachine(this);        
     }
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
+        stateMachine.ChangeState(stateMachine.IdleingState);
+        HealthSystem.OnDeath += OnDie;
     }
-
-    private void FixedUpdate()
+    private void Update()
     {
-        if(JoystickMovement.instance.joyVec.x != 0 || JoystickMovement.instance.joyVec.y != 0)
-        {
-            Vector3 moveDirection = JoystickMovement.instance.joyVec;
-            rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.y * moveSpeed);
-            rb.rotation = Quaternion.LookRotation(new Vector3(moveDirection.x,0, moveDirection.y));
-        }
-        else
-        {
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
-        }
+        stateMachine.Execute();
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -48,21 +43,16 @@ public class PlayerController : MonoBehaviour
         {
             StageManager.instance.NextStage();
         }
-
-        if(other.transform.CompareTag("HpBooster"))
+        if (other.gameObject.CompareTag("Monster"))
         {
-            PlayerHpBar.instance.GetHpBoost();
-            Destroy(other.gameObject);
-        }
-        if (other.transform.CompareTag("MeleeAtk"))
-        {
-            other.transform.parent.GetComponent<EnemyController>().meleeAtkArea.SetActive(false);
-            PlayerHpBar.instance.currenHp -= other.transform.parent.GetComponent<EnemyController>().damage * 2f;
-            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Dmg"))
+            if (stateMachine.Target.Data != null)
             {
-                animator.SetTrigger("Dmg");
-                Instantiate(EffectSet.instance.playerDmgEffect, PlayerTargeting.instance.attackPoint.position, Quaternion.Euler(90, 0, 0));
+                HealthSystem.ChangeHealth(-stateMachine.Target.Data.Damage);
             }
         }
+    }
+    public void OnDie()
+    {
+        Animator.SetTrigger("Die");
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerTargeting : MonoBehaviour
 {
-    public static PlayerTargeting instance;
     private ObjectPoolManager pool;
 
     public bool getATarget = false;
@@ -15,6 +14,7 @@ public class PlayerTargeting : MonoBehaviour
     private float closetDist = 100f; //가까운 거리
     private float targetDist = 100f; //타겟 거리
     public float atkSpd = 1f;
+    public float maxAttackDistance = 10f;
 
     public LayerMask layerMask;
     public List<GameObject> MonsterList = new List<GameObject>();
@@ -23,16 +23,7 @@ public class PlayerTargeting : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            pool = ObjectPoolManager.instance;
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
+        pool = ObjectPoolManager.instance;
     }
 
     private void OnDrawGizmos()
@@ -58,7 +49,6 @@ public class PlayerTargeting : MonoBehaviour
             }
         }
     }
-
     private void Update()
     {
         SetTarget();
@@ -67,15 +57,13 @@ public class PlayerTargeting : MonoBehaviour
 
     public void Attack()
     {
-        PlayerController.instance.animator.SetBool("Shot", true);
         GameObject obj = pool.SqawnFromPool("bullet");
         obj.SetActive(true);
         Shoot(obj);
     }
     public void Shoot(GameObject obj)
     {
-        obj.transform.position = attackPoint.position;
-        obj.transform.rotation = Quaternion.identity;
+        obj.transform.SetPositionAndRotation(attackPoint.position, Quaternion.identity);
         obj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;
     }
     public void SetTarget()
@@ -89,9 +77,9 @@ public class PlayerTargeting : MonoBehaviour
 
             for(int i = 0; i < MonsterList.Count; i++)
             {
+                RaycastHit hit;
                 if (MonsterList[i] == null) { return; }
                 currentDist = Vector3.Distance(transform.position, MonsterList[i].transform.GetChild(0).position);
-                RaycastHit hit;
                 bool isHit = Physics.Raycast(transform.position, MonsterList[i].transform.GetChild(0).position - transform.position
                     , out hit, 20f, layerMask);
                 if(isHit && hit.transform.CompareTag("Monster"))
@@ -124,27 +112,14 @@ public class PlayerTargeting : MonoBehaviour
 
     public void AtkTarget()
     {
-        if(targetIndex == -1 || MonsterList.Count ==0)
+        float distanceToTarget = Vector3.Distance(transform.position, MonsterList[targetIndex].transform.GetChild(0).position);
+
+        if (distanceToTarget <= maxAttackDistance)
         {
-            PlayerController.instance.animator.SetBool("Shot", false);
-            return;
-        }
-        if(getATarget && !JoystickMovement.instance.isPlayerMoving && MonsterList.Count != 0)
-        {
-            transform.LookAt(MonsterList[targetIndex].transform.GetChild(0));
-            //Attack();
-            PlayerController.instance.animator.SetBool("Shot", true) ;
-            PlayerController.instance.animator.SetBool("Run", false);
-        }
-        else if(JoystickMovement.instance.isPlayerMoving)
-        {
-            PlayerController.instance.animator.SetBool("Shot", false);
-            PlayerController.instance.animator.SetBool("Run", true);
-        }
-        else
-        {
-            PlayerController.instance.animator.SetBool("Shot", false);
-            PlayerController.instance.animator.SetBool("Run", false);
+            if (getATarget && !JoystickMovement.instance.isPlayerMoving && MonsterList.Count != 0)
+            {
+                transform.LookAt(MonsterList[targetIndex].transform.GetChild(0));
+            }
         }
     }
 }

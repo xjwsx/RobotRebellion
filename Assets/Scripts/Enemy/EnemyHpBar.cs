@@ -1,41 +1,41 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyHpBar : MonoBehaviour
 {
-    public Transform enemy;
+    private EnemyController enemy;
+    private HealthSystem healthSystem;
     public Slider hpSlider;
-    public Slider backHpSlider;
     public Text hpText;
 
-    public bool backHpHit = false;
-    public float maxHp;
-    public float currenHp;
+    private void Start()
+    {
+        enemy = GameManager.instance.enemyController;
+        healthSystem = enemy.GetComponent<HealthSystem>();
+        UpdateHpTextUI();
+        healthSystem.OnDamage += UpdateHealthUI;
+        healthSystem.OnDamage += UpdateHpTextUI;
+        healthSystem.OnDeath += SetActive;
+    }
     void Update()
     {
-        transform.position = enemy.transform.position;
-        hpSlider.value = Mathf.Lerp(hpSlider.value,currenHp / maxHp, Time.deltaTime * 5f);
-        hpText.text = currenHp.ToString("N0");
-
-        if(backHpHit )
-        {
-            backHpSlider.value = Mathf.Lerp(backHpSlider.value, hpSlider.value, Time.deltaTime * 10f);
-            if(hpSlider.value >= backHpSlider.value - 0.01f)
-            {
-                backHpHit = false;
-                backHpSlider.value = hpSlider.value;
-            }
-        }
+        hpSlider.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y + 1f, enemy.transform.position.z);
+        hpText.transform.position = hpSlider.transform.position;
     }
-    public void Dmg()
+    private void UpdateHealthUI()
     {
-        currenHp -= 300f;
-        Invoke("BackHpFun", 0.5f);
+        hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
     }
-    private void BackHpFun()
+    private void UpdateHpTextUI()
     {
-        backHpHit = true;
+        hpText.text = healthSystem.CurrentHealth.ToString("N0");
+    }
+    public void SetActive()
+    {
+        gameObject.SetActive(false);
     }
 }

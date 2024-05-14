@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RoomCondition : MonoBehaviour
 {
-    List<GameObject> MonsterListInRoom = new List<GameObject>();
+    List<GameObject> MonsterListInRoom = new();
     public bool playerInThisRoom = false;
     public bool isClearRoom = false;
 
@@ -24,7 +24,7 @@ public class RoomCondition : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             playerInThisRoom = true;
-            PlayerTargeting.instance.MonsterList = new List<GameObject>(MonsterListInRoom);
+            GameManager.instance.playerController.PlayerTargeting.MonsterList = new List<GameObject>(MonsterListInRoom);
         }
         if(other.CompareTag("Monster"))
         {
@@ -36,7 +36,7 @@ public class RoomCondition : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInThisRoom = false;
-            PlayerTargeting.instance.MonsterList.Clear();
+            GameManager.instance.playerController.PlayerTargeting.MonsterList.Clear();
         }
         if (other.CompareTag("Monster"))
         {

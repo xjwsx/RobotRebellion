@@ -37,7 +37,7 @@ public class ObjectPoolManager : MonoBehaviour
             poolDict.Add(pool.name, objectPool);
         }
     }
-    public GameObject SqawnFromPool(string name)
+    public GameObject SpawnFromPool(string name)
     {
         if (!poolDict.ContainsKey(name))
             return null;

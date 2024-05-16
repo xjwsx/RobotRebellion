@@ -57,7 +57,7 @@ public class PlayerTargeting : MonoBehaviour
 
     public void Attack()
     {
-        GameObject obj = pool.SqawnFromPool("bullet");
+        GameObject obj = pool.SpawnFromPool("bullet");
         obj.SetActive(true);
         Shoot(obj);
     }

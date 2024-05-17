@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class SoundSource : MonoBehaviour
 {
-    private AudioSource audioSource;
-
+    public AudioSource audioSource;
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     public void Play(AudioClip clip)
     {
         if(audioSource == null)

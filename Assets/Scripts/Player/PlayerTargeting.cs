@@ -61,10 +61,10 @@ public class PlayerTargeting : MonoBehaviour
         obj.SetActive(true);
         Shoot(obj);
     }
-    public void Shoot(GameObject obj)
+    public void Shoot(GameObject obj, float angle = 0f)
     {
-        obj.transform.SetPositionAndRotation(attackPoint.position, Quaternion.identity);
-        obj.GetComponent<Rigidbody>().velocity = transform.forward * bulletSpeed;
+        obj.transform.SetPositionAndRotation(attackPoint.position, Quaternion.Euler(0, angle, 0));
+        obj.GetComponent<Rigidbody>().velocity = Quaternion.Euler(0, angle, 0) * transform.forward * bulletSpeed;
     }
     public void SetTarget()
     {
@@ -121,5 +121,56 @@ public class PlayerTargeting : MonoBehaviour
                 transform.LookAt(MonsterList[targetIndex].transform.GetChild(0));
             }
         }
+    }
+    public void BounceAttack(GameObject hitMonster)
+    {
+        float bounceRadius = 5f;
+        Collider[] hitColliders = Physics.OverlapSphere(hitMonster.transform.position, bounceRadius);
+
+        foreach (var collider in hitColliders)
+        {
+            if (collider.CompareTag("Monster") && collider.gameObject != hitMonster)
+            {
+                var healthSystem = collider.GetComponent<HealthSystem>();
+                if (healthSystem != null)
+                {
+                    healthSystem.ChangeHealth(-10);
+                }
+
+                Rigidbody rb = collider.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    Vector3 bounceDirection = (collider.transform.position - hitMonster.transform.position).normalized;
+                    rb.AddForce(bounceDirection * 5f, ForceMode.Impulse);
+                }
+            }
+        }
+    }
+
+    public void DoubleBulletAttack()
+    {
+        GameObject bullet1 = pool.SpawnFromPool("bullet");
+        GameObject bullet2 = pool.SpawnFromPool("bullet");
+
+        bullet1.SetActive(true);
+        bullet2.SetActive(true);
+
+        Shoot(bullet1);
+        Shoot(bullet2);
+    }
+
+    public void TripleBulletAttack()
+    {
+        GameObject bullet1 = pool.SpawnFromPool("bullet");
+        GameObject bullet2 = pool.SpawnFromPool("bullet");
+        GameObject bullet3 = pool.SpawnFromPool("bullet");
+
+        bullet1.SetActive(true);
+        bullet2.SetActive(true);
+        bullet3.SetActive(true);
+
+        Shoot(bullet1);
+        Shoot(bullet2, 45); 
+        Shoot(bullet3, -45);
     }
 }

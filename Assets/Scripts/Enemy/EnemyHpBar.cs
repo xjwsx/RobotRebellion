@@ -7,14 +7,13 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyHpBar : MonoBehaviour
 {
-    private EnemyController enemy;
+    [SerializeField] private EnemyController enemy;
     private HealthSystem healthSystem;
     public Slider hpSlider;
     public Text hpText;
 
     private void Start()
     {
-        enemy = GameManager.instance.enemyController;
         healthSystem = enemy.GetComponent<HealthSystem>();
         UpdateHpTextUI();
         healthSystem.OnDamage += UpdateHealthUI;

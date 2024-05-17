@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
@@ -17,7 +18,11 @@ public class AudioManager : MonoBehaviour
     //[SerializeField] private AudioClip walk;
     //[SerializeField] private AudioClip attack;
 
+    [SerializeField] private Slider soundEffect;
+    [SerializeField] private Slider backgroundMusic;
+
     private AudioSource BGM;
+
     public event Action<bool> OnButtonClick;
     private bool isButtonClick = false;
 
@@ -43,6 +48,7 @@ public class AudioManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
         pool = GetComponent<ObjectPoolManager>();
+
         BGM = GetComponent<AudioSource>();
         BGM.volume = 0.5f;
         BGM.loop = true;
@@ -52,6 +58,11 @@ public class AudioManager : MonoBehaviour
         PlayGameBgm(bgmStart);
         SceneManager.sceneLoaded += CheckStartScene;
         OnButtonClick += PlayButtonClickSound;
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.onValueChanged.AddListener(delegate { SetBackgroundMusicVolume(); });
+            backgroundMusic.value = BGM.volume;
+        }
     }
     public void CheckStartScene(Scene changed, LoadSceneMode loadSceneMode)
     {
@@ -101,6 +112,13 @@ public class AudioManager : MonoBehaviour
         if (isOn)
         {
             PlayClip(buttonClick);
+        }
+    }
+    private void SetBackgroundMusicVolume()
+    {
+        if (BGM != null && backgroundMusic != null)
+        {
+            BGM.volume = backgroundMusic.value;
         }
     }
 }

@@ -46,7 +46,7 @@ public class PlayerBaseState : IState
             }
         }
     }
-    private bool IsInAttackRange()
+    public bool IsInAttackRange()
     {
         if (stateMachine.Target.HealthSystem.IsDead) return false;
 

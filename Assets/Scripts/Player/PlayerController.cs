@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public HealthSystem HealthSystem { get; private set; }
     private PlayerStateMachine stateMachine;
 
+    public List<SkillType> Skills { get; private set; } = new List<SkillType>();
+
     private void Awake()
     {
         AnimationData.Initialize();
@@ -51,6 +53,11 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    public void AddSkill(SkillType skill)
+    {
+        Skills.Add(skill);
+    }
+
     public void OnDie()
     {
         Animator.SetTrigger("Die");

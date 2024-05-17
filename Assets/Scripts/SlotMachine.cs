@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+public enum SkillType
+{
+    BounceAttack,
+    DoubleBullet,
+    TripleBullet
+}
 
 public class SlotMachine : MonoBehaviour
 {
@@ -84,11 +90,17 @@ public class SlotMachine : MonoBehaviour
             Slot[i].interactable = true;
         }
     }
-
+    private SkillType GetSkillFromIndex(int index)
+    {
+        return (SkillType)index;
+    }
     public void ClickBtn(int index)
     {
         DisplayResultImage.sprite = SkillSprite[ResultIndexList[index]];
         DisplayResultImage.enabled = true;
+
+        SkillType selectedSkill = GetSkillFromIndex(ResultIndexList[index]);
+        GameManager.instance.playerController.AddSkill(selectedSkill);
     }
     public void StartButton()
     {

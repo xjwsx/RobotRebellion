@@ -8,6 +8,8 @@ TagManager:
   - Monster
   - bullet
   - Stage
+  - Check
+  - MonsterBullet
   layers:
   - Default
   - TransparentFX

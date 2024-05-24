@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     {
         stateMachine.ChangeState(stateMachine.IdleingState);
         HealthSystem.OnDeath += OnDie;
+        //HealthSystem.OnDeath += MonsterCheck;
     }
     private void Update()
     {
@@ -45,7 +46,7 @@ public class PlayerController : MonoBehaviour
         {
             StageManager.instance.NextStage();
         }
-        if (other.gameObject.CompareTag("Monster"))
+        if (other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("MonsterBullet"))
         {
             if (stateMachine.Target.Data != null)
             {
@@ -61,5 +62,20 @@ public class PlayerController : MonoBehaviour
     public void OnDie()
     {
         Animator.SetTrigger("Die");
+    }
+    //public void MonsterCheck()
+    //{
+    //    for (int i = 0; i < PlayerTargeting.MonsterList.Count; i++)
+    //    {
+    //        if (!PlayerTargeting.MonsterList[i].activeSelf)
+    //        {
+    //            PlayerTargeting.MonsterList.RemoveAt(i);
+    //        }
+    //    }
+    //}
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, Data.AttackRange);
     }
 }

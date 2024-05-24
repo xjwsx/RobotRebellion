@@ -1,21 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomCondition : MonoBehaviour
 {
-    List<GameObject> MonsterListInRoom = new();
+    public static RoomCondition instance;
+    public List<GameObject> MonsterListInRoom = new();
     public bool playerInThisRoom = false;
     public bool isClearRoom = false;
-
-    void Update()
+    private void Awake()
+    {
+        instance = this;
+    }
+    private void Update()
     {
         if(playerInThisRoom)
         {
-            if(MonsterListInRoom.Count <= 0 && !isClearRoom)
-            {
-                isClearRoom = true;
-            }
+            CheckRoomClearance();
         }
     }
 
@@ -28,7 +30,7 @@ public class RoomCondition : MonoBehaviour
         }
         if(other.CompareTag("Monster"))
         {
-            MonsterListInRoom.Add(other.transform.parent.gameObject);
+            MonsterListInRoom.Add(other.transform.gameObject);
         }
     }
     private void OnTriggerExit(Collider other)
@@ -38,9 +40,14 @@ public class RoomCondition : MonoBehaviour
             playerInThisRoom = false;
             GameManager.instance.playerController.PlayerTargeting.MonsterList.Clear();
         }
-        if (other.CompareTag("Monster"))
+    }
+
+    private void CheckRoomClearance()
+    {
+        if (!isClearRoom && GameManager.instance.playerController.PlayerTargeting.MonsterList.Count == 0)
         {
-            MonsterListInRoom.Remove(other.transform.parent.gameObject);
+            isClearRoom = true;
+            StageManager.instance.OpenDoor();
         }
     }
 }

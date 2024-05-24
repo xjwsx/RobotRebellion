@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour   
 {
     public static GameManager instance;
     [SerializeField] private GameObject InventoryUI;
     [SerializeField] private GameObject joystickUI;
     public PlayerController playerController;
-    public EnemyController enemyController;
+    public EnemyController[] enemyController;
     private void Awake()
     {
         if (instance == null)

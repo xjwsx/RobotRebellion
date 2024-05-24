@@ -12,5 +12,6 @@ public class EnemySO : ScriptableObject
     [field: SerializeField] public float MoveSpeed { get; private set; }
     [field: SerializeField] public int Damage { get; private set; }
     [field: SerializeField] public float BaseRotationDamping { get; private set; }
+    [field: SerializeField] public bool IsRanged { get; private set; }
 
 }

@@ -25,7 +25,7 @@ public class HealthSystem : MonoBehaviour
         CurrentHealth += change;
         //CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
         //CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
-        //CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
 
         OnDamage?.Invoke();
 

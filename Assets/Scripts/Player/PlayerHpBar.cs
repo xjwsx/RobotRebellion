@@ -20,12 +20,13 @@ public class PlayerHpBar : MonoBehaviour
     }
     void Update()
     {
+        hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
         hpSlider.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1.1f, player.transform.position.z + 0.5f);
         hpText.transform.position = hpSlider.transform.position;
     }
     private void UpdateHealthUI()
     {
-        hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
+        //hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
     }
     private void UpdateHpTextUI()
     {

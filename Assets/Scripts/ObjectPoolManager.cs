@@ -12,14 +12,41 @@ public class ObjectPoolManager : MonoBehaviour
         public string name;
         public int size;
     }
-    public static ObjectPoolManager instance;
+    private static ObjectPoolManager instance;
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDict;
-
+    public static ObjectPoolManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<ObjectPoolManager>();
+                if (instance != null)
+                {
+                    instance.InitializePool();
+                }
+                else
+                {
+                    Debug.LogError("There needs to be one active ObjectPoolManager script on a GameObject in your scene.");
+                }
+            }
+            return instance;
+        }
+    }
     private void Awake()
     {
-        instance = this;
-        InitializePool();
+        if (instance == null)
+        {
+            instance = this;
+            InitializePool();
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(gameObject);
     }
 
     public void InitializePool()

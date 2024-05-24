@@ -14,21 +14,21 @@ public class PlayerAttackState : PlayerBaseState
         StopAnimation(stateMachine.Player.AnimationData.IdleParamaterHash);
         StopAnimation(stateMachine.Player.AnimationData.WalkParamaterHash);
 
-        UseSkills();
+        //UseSkills();
     }
     public override void Exit()
     {
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.AttackParamaterHash);
     }
-    public override void Execute()
-    {
-        base.Execute();
-        if (!IsInAttackRange())
-        {
-            stateMachine.ChangeState(stateMachine.IdleingState);
-        }
-    }
+    //public override void Execute()
+    //{
+    //    base.Execute();
+    //    if (!IsInAttackRange())
+    //    {
+    //        stateMachine.ChangeState(stateMachine.IdleingState);
+    //    }
+    //}
     private void UseSkills()
     {
         foreach (SkillType skill in stateMachine.Player.Skills)

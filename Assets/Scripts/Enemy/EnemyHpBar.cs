@@ -22,12 +22,13 @@ public class EnemyHpBar : MonoBehaviour
     }
     void Update()
     {
+        hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
         hpSlider.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y + 1f, enemy.transform.position.z);
         hpText.transform.position = hpSlider.transform.position;
     }
     private void UpdateHealthUI()
     {
-        hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
+        //hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
     }
     private void UpdateHpTextUI()
     {

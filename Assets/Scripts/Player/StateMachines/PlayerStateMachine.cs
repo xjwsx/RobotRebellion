@@ -27,4 +27,26 @@ public class PlayerStateMachine : StateMachine
         MovementSpeed = player.Data.MoveSpeed;
         Damage = player.Data.Damage;
     }
+    public void UpdateTarget()
+    {
+        Target = FindNearestMonster();
+    }
+
+    private EnemyController FindNearestMonster()
+    {
+        EnemyController nearestMonster = null;
+        float minDistance = float.MaxValue;
+
+        foreach (var monster in Player.PlayerTargeting.MonsterList)
+        {
+            float distance = Vector3.Distance(Player.transform.position, monster.transform.position);
+            if (distance < minDistance)
+            {
+                nearestMonster = monster.GetComponent<EnemyController>();
+                minDistance = distance;
+            }
+        }
+
+        return nearestMonster;
+    }
 }

@@ -9,7 +9,6 @@ public class EnemyStateMachine : StateMachine
     public EnemyIdleState IdleingState { get; }
     public EnemyWalkState WalkingState { get;}
     public EnemyAttackState AttackState { get; }
-    public EnemyGetHitState GetHitState { get; }
     public string MonsterName { get; private set; }
     public float ChasingRange { get; private set; }
     public float AttackRange { get; private set; }
@@ -17,6 +16,7 @@ public class EnemyStateMachine : StateMachine
     public float MovementSpeed { get; private set; }
     public int Damage {  get; private set; }
     public float RotationDamping { get; private set; }
+    public bool IsRanged { get; private set; }
 
 
     public EnemyStateMachine(EnemyController enemy)
@@ -27,7 +27,6 @@ public class EnemyStateMachine : StateMachine
         IdleingState = new EnemyIdleState(this);
         WalkingState = new EnemyWalkState(this);
         AttackState = new EnemyAttackState(this);
-        GetHitState = new EnemyGetHitState(this);
 
         MonsterName = enemy.Data.MonsterName;
         ChasingRange = enemy.Data.PlayerChasingRange;
@@ -36,6 +35,7 @@ public class EnemyStateMachine : StateMachine
         MovementSpeed = enemy.Data.MoveSpeed;
         Damage = enemy.Data.Damage;
         RotationDamping = enemy.Data.BaseRotationDamping;
+        IsRanged = enemy.Data.IsRanged;
     }
 
 }

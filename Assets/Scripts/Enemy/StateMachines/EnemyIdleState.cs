@@ -9,7 +9,6 @@ public class EnemyIdleState : EnemyBaseState
     {
         base.Enter();
         StartAnimation(stateMachine.Enemy.AnimationData.IdleParamaterHash);
-        StopAnimation(stateMachine.Enemy.AnimationData.GetHitParamaterHash);
         StopAnimation(stateMachine.Enemy.AnimationData.WalkParamaterHash);
         StopAnimation(stateMachine.Enemy.AnimationData.AttackParamaterHash);
     }
@@ -21,11 +20,5 @@ public class EnemyIdleState : EnemyBaseState
     public override void Execute()
     {
         base.Execute();
-
-        if(IsInChaseRange())
-        {
-            stateMachine.ChangeState(stateMachine.WalkingState);
-            return;
-        }
     }
 }

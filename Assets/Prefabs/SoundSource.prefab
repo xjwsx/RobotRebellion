@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1739774578019878941}
   - component: {fileID: 1418370953904454458}
-  - component: {fileID: 6724302536286522000}
   m_Layer: 0
   m_Name: SoundSource
   m_TagString: Untagged
@@ -28,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7037037, y: 0.7037037, z: 0.7037037}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -129,15 +128,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6724302536286522000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6427568817332673235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baf27f6a7761632479402a9ce5b150c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -15,4 +15,5 @@ MonoBehaviour:
   <AttackRange>k__BackingField: 10
   <MaxHp>k__BackingField: 1000
   <MoveSpeed>k__BackingField: 5
-  <Damage>k__BackingField: 300
+  <Damage>k__BackingField: 500
+  <Exp>k__BackingField: 30

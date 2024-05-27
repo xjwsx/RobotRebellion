@@ -19,4 +19,4 @@ MonoBehaviour:
   <MoveSpeed>k__BackingField: 1
   <Damage>k__BackingField: 10
   <BaseRotationDamping>k__BackingField: 0
-  <IsRanged>k__BackingField: 1
+  <IsRanged>k__BackingField: 0

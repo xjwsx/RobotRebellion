@@ -41,11 +41,29 @@ public class PlayerAttackState : PlayerBaseState
                         stateMachine.Player.PlayerTargeting.BounceAttack(stateMachine.Player.PlayerTargeting.MonsterList[stateMachine.Player.PlayerTargeting.targetIndex]);
                     }
                     break;
+                case SkillType.PlusBullet:
+                    //stateMachine.Player.PlayerTargeting.DoubleBulletAttack();
+                    break;
                 case SkillType.DoubleBullet:
                     stateMachine.Player.PlayerTargeting.DoubleBulletAttack();
                     break;
                 case SkillType.TripleBullet:
                     stateMachine.Player.PlayerTargeting.TripleBulletAttack();
+                    break;
+                case SkillType.BoundWallBullet:
+                    //stateMachine.Player.PlayerTargeting.TripleBulletAttack();
+                    break;
+                case SkillType.UpgradeBulletSpeed:
+                    //stateMachine.Player.PlayerTargeting.TripleBulletAttack();
+                    break;
+                case SkillType.UpgradeBulletDamage:
+                    //stateMachine.Player.PlayerTargeting.TripleBulletAttack();
+                    break;
+                case SkillType.BackAttack:
+                    //stateMachine.Player.PlayerTargeting.TripleBulletAttack();
+                    break;
+                case SkillType.SideAttack:
+                    //stateMachine.Player.PlayerTargeting.TripleBulletAttack();
                     break;
             }
         }

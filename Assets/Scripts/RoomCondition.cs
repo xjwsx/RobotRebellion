@@ -9,6 +9,26 @@ public class RoomCondition : MonoBehaviour
     public List<GameObject> MonsterListInRoom = new();
     public bool playerInThisRoom = false;
     public bool isClearRoom = false;
+
+    public event Action<bool> OnClearRoom;
+
+    public bool IsClearRoom
+    {
+        get { return isClearRoom; }
+        set
+        {
+            if(isClearRoom != value)
+            {
+                isClearRoom = value;
+                if(isClearRoom)
+                {
+                    OnClearRoom?.Invoke(value);
+                }
+            }
+
+        }
+    }
+
     private void Awake()
     {
         instance = this;
@@ -38,15 +58,17 @@ public class RoomCondition : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInThisRoom = false;
+            isClearRoom = false;
             GameManager.instance.playerController.PlayerTargeting.MonsterList.Clear();
         }
     }
 
     private void CheckRoomClearance()
     {
-        if (!isClearRoom && GameManager.instance.playerController.PlayerTargeting.MonsterList.Count == 0)
+        if (!IsClearRoom && GameManager.instance.playerController.PlayerTargeting.MonsterList.Count == 0)
         {
-            isClearRoom = true;
+            IsClearRoom = true;
+
             StageManager.instance.OpenDoor();
         }
     }

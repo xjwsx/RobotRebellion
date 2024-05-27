@@ -26,10 +26,6 @@ public class ObjectPoolManager : MonoBehaviour
                 {
                     instance.InitializePool();
                 }
-                else
-                {
-                    Debug.LogError("There needs to be one active ObjectPoolManager script on a GameObject in your scene.");
-                }
             }
             return instance;
         }

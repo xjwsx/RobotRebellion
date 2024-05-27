@@ -10,6 +10,9 @@ TagManager:
   - Stage
   - Check
   - MonsterBullet
+  - EXP
+  - Angel
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -19,9 +22,9 @@ TagManager:
   - UI
   - Monster
   - Wall
-  - 
-  - 
-  - 
+  - EXP
+  - Road
+  - Player
   - 
   - 
   - 

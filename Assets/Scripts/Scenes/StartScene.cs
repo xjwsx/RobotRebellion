@@ -5,20 +5,25 @@ using UnityEngine;
 public class StartScene : MonoBehaviour
 {
     [SerializeField] private GameObject optionUI;
+    [SerializeField] private AudioSource audioSource;
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void OpenOptionUI()
     {
-        AudioManager.instance.IsButtonClick = true;
+        audioSource.Play();
         optionUI.SetActive(true);
     }
     public void OnLoadMainScene()
     {
-        AudioManager.instance.IsButtonClick = true;
+        audioSource.Play();
         LoadingSceneController.LoadScene("MainScene");
     }
     public void CloseButton()
     {
-        AudioManager.instance.IsButtonClick = true;
+        audioSource.Play();
         optionUI.SetActive(false);
     }
 }

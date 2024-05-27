@@ -37,8 +37,16 @@ public class EnemyBaseState : IState
         }
         else if(IsInAttackRange())
         {
-            stateMachine.ChangeState(stateMachine.AttackState);
-            LookAtPlayer();
+            if(stateMachine.Enemy.Data.IsRanged && !stateMachine.Enemy.isPreparingAttack)
+            {
+                stateMachine.Enemy.StartCoroutine(stateMachine.Enemy.WaitForPlayer());
+                //LookAtPlayer();
+            }
+            else if(!stateMachine.Enemy.Data.IsRanged)
+            {
+                stateMachine.ChangeState(stateMachine.AttackState);
+                LookAtPlayer();
+            }
         }
         else
         {

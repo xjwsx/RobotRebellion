@@ -1,110 +1,115 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 public enum SkillType
 {
     BounceAttack,
+    PlusBullet,
     DoubleBullet,
-    TripleBullet
+    TripleBullet,
+    BoundWallBullet,
+    UpgradeBulletSpeed,
+    UpgradeBulletDamage,
+    BackAttack,
+    SideAttack
 }
 
 public class SlotMachine : MonoBehaviour
 {
-    public GameObject[] SlotSkillObject;
-    public Button[] Slot;
-
-    public Sprite[] SkillSprite;
-
-    [System.Serializable]
-    public class DisplayItemSlot
-    {
-        public List<Image> SlotSprite = new();
-    }
-    public DisplayItemSlot[] DisplayItemSlots;
-
+    public RectTransform skillPanel;
+    public GameObject SlotSkillObject;
+    public Button Slot;
     public Image DisplayResultImage;
 
-    public List<int> StartList = new();
-    public List<int> ResultIndexList = new();
-    private int ItemCnt = 3;
-    private readonly int[] answer = { 2, 3, 1 };
+    public List<Sprite> SkillSprite = new List<Sprite>();
+    public List<Image> SlotSprite = new();
 
+    private List<Sprite> shuffledSprites = new List<Sprite>();
+    private void OnEnable()
+    {
+        InitializeSlots();
+    }
     void InitializeSlots()
     {
-        for (int i = 0; i < ItemCnt * Slot.Length; i++)
-        {
-            StartList.Add(i);
-        }
-        for (int i = 0; i < Slot.Length; i++)
-        {
-            InitializeSlot(i);
-        }
-    }
-    public void InitializeSlot(int slotIndex)
-    {
-        for (int j = 0; j < ItemCnt; j++)
-        {
-            Slot[slotIndex].interactable = false;
-            int randomIndex = Random.Range(0, StartList.Count);
-            if (IsResultIndex(slotIndex, j))
-            {
-                ResultIndexList.Add(StartList[randomIndex]);
-            }
-            DisplayItemSlots[slotIndex].SlotSprite[j].sprite = SkillSprite[StartList[randomIndex]];
+        shuffledSprites = new List<Sprite>(SkillSprite);
+        Shuffle(shuffledSprites);
 
-            if (j == 0)
-            {
-                DisplayItemSlots[slotIndex].SlotSprite[ItemCnt].sprite = SkillSprite[StartList[randomIndex]];
-            }
-            StartList.RemoveAt(randomIndex);
+        for (int i = 0; i < SlotSprite.Count; i++)
+        {
+            SlotSprite[i].sprite = shuffledSprites[i];
         }
     }
-    private bool IsResultIndex(int slotIndex, int position)
+    IEnumerator StartSlot()
     {
-        return (slotIndex == 0 && position == 1) ||
-            (slotIndex == 1 && position == 0) ||
-            (slotIndex == 2 && position == 2);
-    }
-    private void StartSlotAnimations()
-    {
-        for (int i = 0; i < Slot.Length; i++)
+        for (int i = 0; i < 40; i++)
         {
-            StartCoroutine(StartSlot(i));
-        }
-    }
-    IEnumerator StartSlot(int SlotIndex)
-    {
-        for (int i = 0; i < (ItemCnt * (6 + SlotIndex * 4) + answer[SlotIndex]) * 2; i++)
-        {
-            SlotSkillObject[SlotIndex].transform.localPosition -= new Vector3(0, 50f, 0);
-            if (SlotSkillObject[SlotIndex].transform.localPosition.y < 50f)
+            SlotSkillObject.transform.localPosition -= new Vector3(0, 50f, 0);
+            if (SlotSkillObject.transform.localPosition.y < 50f)
             {
-                SlotSkillObject[SlotIndex].transform.localPosition += new Vector3(0, 300f, 0);
+                SlotSkillObject.transform.localPosition += new Vector3(0, 800f, 0);
             }
             yield return new WaitForSeconds(0.02f);
         }
-        for (int i = 0; i < ItemCnt; i++)
+        SelectStoppingImage();
+    }
+    void SelectStoppingImage()
+    {
+        float panelCenterY = skillPanel.position.y;
+
+        Image selectedImage = null;
+        float minDistance = float.MaxValue;
+
+        foreach (Image img in SlotSprite)
         {
-            Slot[i].interactable = true;
+            RectTransform imgRect = img.rectTransform;
+            float distance = Mathf.Abs(imgRect.position.y - panelCenterY);
+
+            if (distance < minDistance)
+            {
+                selectedImage = img;
+                minDistance = distance;
+            }
         }
+        if (selectedImage != null)
+        {
+            DisplayResultImage.sprite = selectedImage.sprite;
+            SkillType selectedSkill = GetSkillFromIndex(SkillSprite.IndexOf(selectedImage.sprite));
+            GameManager.instance.playerController.AddSkill(selectedSkill);
+        }
+
+        StartCoroutine(nameof(OffSlotMachineUI));
+    }
+    private void Shuffle<T>(List<T> list)
+    {
+        System.Random rng = new System.Random();
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
+    IEnumerator OffSlotMachineUI()
+    {
+        GameManager.instance.PauseUI.ChangeImage(DisplayResultImage);
+
+        yield return new WaitForSeconds(2f);
+        GameManager.instance.joystickCanvasUI.SetActive(true);
+        gameObject.SetActive(false);
+        DisplayResultImage.enabled = false;
+    }
+    public void StartButton()
+    {
+        Time.timeScale = 1f;
+        StartCoroutine(StartSlot());
     }
     private SkillType GetSkillFromIndex(int index)
     {
         return (SkillType)index;
-    }
-    public void ClickBtn(int index)
-    {
-        DisplayResultImage.sprite = SkillSprite[ResultIndexList[index]];
-        DisplayResultImage.enabled = true;
-
-        SkillType selectedSkill = GetSkillFromIndex(ResultIndexList[index]);
-        GameManager.instance.playerController.AddSkill(selectedSkill);
-    }
-    public void StartButton()
-    {
-        InitializeSlots();
-        StartSlotAnimations();
     }
 }

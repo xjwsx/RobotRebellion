@@ -20,8 +20,8 @@ public class EnemyAttackState : EnemyBaseState
         StopAnimation(stateMachine.Enemy.AnimationData.AttackParamaterHash);
     }
 
-    public override void Execute()
-    {
-        base.Execute();
-    }
+    //public override void Execute()
+    //{
+    //    base.Execute();
+    //}
 }

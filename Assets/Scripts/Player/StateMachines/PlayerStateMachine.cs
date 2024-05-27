@@ -13,6 +13,7 @@ public class PlayerStateMachine : StateMachine
     public float MaxHp { get; private set; }
     public float MovementSpeed { get; private set; }
     public int Damage { get; private set; }
+    public int Exp { get; }
     public PlayerStateMachine(PlayerController player)
     {
         Player = player;
@@ -26,6 +27,7 @@ public class PlayerStateMachine : StateMachine
         MaxHp = player.Data.MaxHp;
         MovementSpeed = player.Data.MoveSpeed;
         Damage = player.Data.Damage;
+        Exp = player.Data.Exp;
     }
     public void UpdateTarget()
     {

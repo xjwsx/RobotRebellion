@@ -9,7 +9,6 @@ public class Bullet : MonoBehaviour
         if (other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Stage"))
         {
             gameObject.SetActive(false);
-        }
-        
+        }        
     }
 }

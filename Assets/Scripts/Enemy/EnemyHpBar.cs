@@ -7,14 +7,13 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyHpBar : MonoBehaviour
 {
-    private EnemyController enemy;
+    [SerializeField] private EnemyController enemy;
     private HealthSystem healthSystem;
     public Slider hpSlider;
     public Text hpText;
 
     private void Start()
     {
-        enemy = GameManager.instance.enemyController;
         healthSystem = enemy.GetComponent<HealthSystem>();
         UpdateHpTextUI();
         healthSystem.OnDamage += UpdateHealthUI;
@@ -23,12 +22,13 @@ public class EnemyHpBar : MonoBehaviour
     }
     void Update()
     {
+        hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
         hpSlider.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y + 1f, enemy.transform.position.z);
         hpText.transform.position = hpSlider.transform.position;
     }
     private void UpdateHealthUI()
     {
-        hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
+        //hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
     }
     private void UpdateHpTextUI()
     {

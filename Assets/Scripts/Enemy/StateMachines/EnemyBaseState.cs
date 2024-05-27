@@ -13,7 +13,6 @@ public class EnemyBaseState : IState
     }
     public virtual void Enter() { }
 
-
     public virtual void Exit() { }
     public virtual void Execute() 
     {
@@ -31,43 +30,27 @@ public class EnemyBaseState : IState
     private void Move()
     {
         Vector3 targetPosition = stateMachine.Target.transform.position;
-        stateMachine.Enemy.NvAgent.SetDestination(targetPosition);
-        //Vector3 movementDirection = GetMovementDirection();
-
-        //Rotate(movementDirection);
-        //Move(movementDirection);
-    }
-    protected float GetNormalizedTime(Animator animator, string tag)
-    {
-        AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        if (!animator.IsInTransition(0) && currentInfo.IsTag(tag))
+        
+        if (!IsInChaseRange())
         {
-            return currentInfo.normalizedTime;
+            stateMachine.ChangeState(stateMachine.IdleingState);
+        }
+        else if(IsInAttackRange())
+        {
+            stateMachine.ChangeState(stateMachine.AttackState);
+            LookAtPlayer();
         }
         else
         {
-            return 0f;
+            stateMachine.ChangeState(stateMachine.WalkingState);
+            stateMachine.Enemy.NvAgent.SetDestination(targetPosition);
         }
     }
-    private Vector3 GetMovementDirection()
+    private void LookAtPlayer()
     {
-        return (stateMachine.Target.transform.position - stateMachine.Enemy.transform.position).normalized;
-    }
-    private void Move(Vector3 direction)
-    {
-        stateMachine.Enemy.Rigidbody.MovePosition(stateMachine.Enemy.Rigidbody.position + direction * stateMachine.MovementSpeed * Time.deltaTime);
-    }
-
-    private void Rotate(Vector3 direction)
-    {
-        if (direction != Vector3.zero)
-        {
-            direction.y = 0;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-            stateMachine.Enemy.transform.rotation = Quaternion.Slerp(stateMachine.Enemy.transform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
-        }
+        Vector3 direction = (stateMachine.Target.transform.position - stateMachine.Enemy.transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        stateMachine.Enemy.transform.rotation = Quaternion.Slerp(stateMachine.Enemy.transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
     protected bool IsInChaseRange()
     {

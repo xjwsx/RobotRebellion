@@ -1,11 +1,12 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
+    private ObjectPoolManager pool;
+    private EnemyStateMachine stateMachine;
+
     [field: Header("References")]
     [field: SerializeField] public EnemySO Data { get; private set; }
 
@@ -15,12 +16,14 @@ public class EnemyController : MonoBehaviour
     public Animator Animator { get; private set; }
     public HealthSystem HealthSystem { get; private set; }
     public NavMeshAgent NvAgent { get; private set; }
-    private EnemyStateMachine stateMachine;
 
+    public Transform attackPoint;
+    public float bulletSpeed = 10f;
+    public float drawTime = 1f;
     private void Awake()
     {
+        pool = ObjectPoolManager.Instance;
         AnimationData.Initialize();
-
         Rigidbody = GetComponent<Rigidbody>();
         Animator = GetComponent<Animator>();
         HealthSystem = GetComponent<HealthSystem>();
@@ -45,18 +48,14 @@ public class EnemyController : MonoBehaviour
             if (stateMachine.Target.Data != null)
             {
                 HealthSystem.ChangeHealth(-stateMachine.Target.Data.Damage);
-                stateMachine.ChangeState(stateMachine.GetHitState);
             }
         }
-    }
-    public void OnDamageCheck()
-    {
-        stateMachine.ChangeState(stateMachine.GetHitState);
     }
     public void OnDie()
     {
         Animator.SetTrigger("Die");
         gameObject.SetActive(false);
+        stateMachine.Target.PlayerTargeting.MonsterList.Remove(gameObject);
     }
 
     private void OnDrawGizmosSelected()
@@ -71,66 +70,16 @@ public class EnemyController : MonoBehaviour
         NvAgent.speed = Data.MoveSpeed;
         NvAgent.stoppingDistance = Data.AttackRange;
     }
-
-    //private void Start()
-    //{
-    //    base.Start();
-    //    attackCoolTime = 2f;
-    //    attackCoolTimeCacl = attackCoolTime;
-
-    //    attackRange = 3f;
-    //    nvAgent.stoppingDistance = 1f;
-
-    //    StartCoroutine(ResetAtkArea());
-    //}
-
-    //IEnumerator ResetAtkArea()
-    //{
-    //    while (true)
-    //    {
-    //        yield return null;
-    //        if (!meleeAtkArea.activeInHierarchy && currentState == State.Attack)
-    //        {
-    //            yield return new WaitForSeconds(attackCoolTime);
-    //            meleeAtkArea.SetActive(true);
-    //        }
-    //    }
-    //}
-
-    //protected override void InitMonster()
-    //{
-    //    maxHp += (StageManager.instance.currentStage + 1) * 100f;
-    //    currentHp = maxHp;
-    //    damage += (StageManager.instance.currentStage + 1) * 10f;
-    //}
-
-    //protected override void AtkEffect()
-    //{
-    //    Instantiate(EffectSet.instance.monsterAtkEffect, transform.position, Quaternion.Euler(90, 0, 0));
-    //}
-
-    //void Update()
-    //{
-    //    if (currentHp <= 0)
-    //    //if ( enemyCanvasGo.GetComponent<EnemyHpBar> ( ).currentHp <= 0 )
-    //    {
-    //        nvAgent.isStopped = true;
-
-    //        rb.gameObject.SetActive(false);
-    //        PlayerTargeting.instance.MonsterList.Remove(transform.parent.gameObject);
-    //        PlayerTargeting.instance.targetIndex = -1;
-    //        Destroy(transform.parent.gameObject);
-    //        return;
-    //    }
-    //}
-
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.transform.CompareTag("bullet"))
-    //    {
-    //        enemyCanvasGo.GetComponent<EnemyHpBar>().Dmg();
-    //        currentHp -= 250f;
-    //        Instantiate(EffectSet.instance.monsterDmgEffect, collision.contacts[0].point, Quaternion.Euler(90, 0, 0));
-    //    }
-    //}
+    public void Attack()
+    {
+        GameObject obj = pool.SpawnFromPool("monsterBullet");
+        obj.SetActive(true);
+        Shoot(obj);
+    }
+    public void Shoot(GameObject obj, float angle = 0f)
+    {
+        obj.transform.SetPositionAndRotation(attackPoint.position, Quaternion.Euler(0, angle, 0));
+        obj.GetComponent<Rigidbody>().velocity = Quaternion.Euler(0, angle, 0) * transform.forward * bulletSpeed;
+    }
+    
 }

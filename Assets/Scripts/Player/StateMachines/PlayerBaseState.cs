@@ -15,6 +15,7 @@ public class PlayerBaseState : IState
     public virtual void Execute() 
     {
         Move();
+        stateMachine.UpdateTarget();
     }
     protected void StartAnimation(int animationHash)
     {
@@ -46,9 +47,9 @@ public class PlayerBaseState : IState
             }
         }
     }
-    private bool IsInAttackRange()
+    public bool IsInAttackRange()
     {
-        if (stateMachine.Target.HealthSystem.IsDead) return false;
+        if (stateMachine.Target == null || stateMachine.Target.HealthSystem.IsDead) return false;
 
         float playerDistanceSqr = (stateMachine.Target.transform.position - stateMachine.Player.transform.position).sqrMagnitude;
         return playerDistanceSqr <= stateMachine.Player.Data.AttackRange * stateMachine.Player.Data.AttackRange;

@@ -1,26 +1,12 @@
-using TMPro;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour   
+public class GameManager : Singleton<GameManager>   
 {
-    public static GameManager instance;
     public GameObject joystickCanvasUI;
     public PauseUI PauseUI;
     public GameObject slotMachineUI;
     public PlayerController playerController;
     public EnemyController enemyController;
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
-    }
 
     public void PauseButton()
     {

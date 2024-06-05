@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomCondition : MonoBehaviour
+public class RoomCondition : Singleton<RoomCondition>
 {
-    public static RoomCondition instance;
     public List<GameObject> MonsterListInRoom = new();
     public bool playerInThisRoom = false;
     public bool isClearRoom = false;
@@ -27,11 +25,6 @@ public class RoomCondition : MonoBehaviour
             }
 
         }
-    }
-
-    private void Awake()
-    {
-        instance = this;
     }
     private void Update()
     {

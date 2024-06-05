@@ -3,22 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class StageManager : MonoBehaviour
+public class StageManager : Singleton<StageManager>
 {
-    public static StageManager instance;
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
-    }
     [Serializable]
     public class StageData
     {

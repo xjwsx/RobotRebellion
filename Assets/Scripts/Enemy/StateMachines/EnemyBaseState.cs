@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyBaseState : IState
@@ -40,7 +36,6 @@ public class EnemyBaseState : IState
             if(stateMachine.Enemy.Data.IsRanged && !stateMachine.Enemy.isPreparingAttack)
             {
                 stateMachine.Enemy.StartCoroutine(stateMachine.Enemy.WaitForPlayer());
-                //LookAtPlayer();
             }
             else if(!stateMachine.Enemy.Data.IsRanged)
             {

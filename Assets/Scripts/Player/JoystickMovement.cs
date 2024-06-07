@@ -1,13 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class JoystickMovement : MonoBehaviour
+public class JoystickMovement : Singleton<JoystickMovement>
 {
-    public static JoystickMovement instance;
-
     public GameObject bigStick;
     public GameObject smallStick;
     Vector3 stickFirstPosition;

@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyHpBar : MonoBehaviour
 {
@@ -16,7 +12,6 @@ public class EnemyHpBar : MonoBehaviour
     {
         healthSystem = enemy.GetComponent<HealthSystem>();
         UpdateHpTextUI();
-        healthSystem.OnDamage += UpdateHealthUI;
         healthSystem.OnDamage += UpdateHpTextUI;
         healthSystem.OnDeath += SetActive;
     }
@@ -25,10 +20,6 @@ public class EnemyHpBar : MonoBehaviour
         hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
         hpSlider.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y + 1f, enemy.transform.position.z);
         hpText.transform.position = hpSlider.transform.position;
-    }
-    private void UpdateHealthUI()
-    {
-        //hpSlider.value = Mathf.Lerp(hpSlider.value, healthSystem.CurrentHealth / healthSystem.MaxHealth, Time.deltaTime * 5f);
     }
     private void UpdateHpTextUI()
     {

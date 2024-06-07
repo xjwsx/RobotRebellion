@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,52 +19,45 @@ public class LoadingSceneController : MonoBehaviour
 
         SceneManager.LoadScene("LoadingScene");
     }
-
-    private void Start()
+    private async void Start()
     {
-        StartCoroutine(LoadSceneProcess());
+        await LoadSceneAsync(nextScene);
     }
 
-    IEnumerator LoadSceneProcess()
+    private async Task LoadSceneAsync(string sceneName)
     {
-        AsyncOperation op = SceneManager.LoadSceneAsync(nextScene);
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
         op.allowSceneActivation = false;
-
-        float timer = 0f;
-        while (!op.isDone)
+        while(!op.isDone)
         {
-            yield return null;
-
             if(op.progress < 0.9f)
             {
                 progressBar.fillAmount = op.progress;
             }
             else
             {
-                timer += Time.unscaledDeltaTime;
-                progressBar.fillAmount = Mathf.Lerp(0f, 1f, timer);
-                if(progressBar.fillAmount >= 1f)
+                progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, 1f, Time.unscaledDeltaTime);
+                if (progressBar.fillAmount >= 0.99f)
                 {
-                    //SetImageTransparency(progressBar, 0f);
-                    //SetImageTransparency(progressBarImg, 0f);
                     textUI.gameObject.SetActive(true);
-
-                    yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
-
+                    await WaitForMouseClick();
                     op.allowSceneActivation = true;
-                    yield break;
+                    return;
                 }
             }
+            await Task.Yield();
         }
     }
 
-    private void SetImageTransparency(Image img, float alpha)
+    private Task WaitForMouseClick()
     {
-        if(img != null)
-        {
-            Color color = img.color;
-            color.a = alpha;
-            img.color = color;
-        }
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(WaitForClickCoroutine(tcs));
+        return tcs.Task;
+    }
+    private IEnumerator WaitForClickCoroutine(TaskCompletionSource<bool> tcs)
+    {
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+        tcs.SetResult(true);
     }
 }

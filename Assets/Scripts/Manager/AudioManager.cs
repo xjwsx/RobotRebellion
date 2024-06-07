@@ -1,14 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
-    public static AudioManager instance;
     private GameObject walkSoundObject;
     private ObjectPoolManager pool;
 
@@ -35,18 +31,10 @@ public class AudioManager : MonoBehaviour
             OnButtonClick?.Invoke(value);
         }
     }
-
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
+        base.Awake();
+
         pool = GetComponent<ObjectPoolManager>();
 
         BGM = GetComponent<AudioSource>();

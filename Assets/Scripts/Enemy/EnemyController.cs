@@ -54,13 +54,23 @@ public class EnemyController : MonoBehaviour
         {
             if (stateMachine.Target.Data != null)
             {
-                HealthSystem.ChangeHealth(-stateMachine.Target.Data.Damage);
+                int critical = CalculateDamage(stateMachine.Target.Data.Damage);
+                HealthSystem.ChangeHealth(-critical);
                 GameObject obj = pool.SpawnFromPool("EnemyHitFX");
                 Vector3 CurrentPostion = new Vector3(other.transform.position.x, other.transform.position.y + 0.3f, other.transform.position.z);
                 obj.transform.position = CurrentPostion;
                 obj.SetActive(true);
             }
         }
+    }
+    private int CalculateDamage(int baseDamage)
+    {
+        bool isCritical = Random.value < stateMachine.Target.criticalHitProbability;
+        if (isCritical)
+        {
+            return (int)(baseDamage * stateMachine.Target.criticalHitMultiplier);
+        }
+        return baseDamage;
     }
     public void OnDie()
     {

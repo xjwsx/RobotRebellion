@@ -12,20 +12,6 @@ public class JoystickMovement : Singleton<JoystickMovement>
 
     public bool isPlayerMoving = false;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
-    }
-
-
     private void Start()
     {
         stickRadius = bigStick.gameObject.GetComponent<RectTransform>().sizeDelta.y / 2;

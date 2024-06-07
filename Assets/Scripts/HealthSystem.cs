@@ -7,7 +7,7 @@ public class HealthSystem : MonoBehaviour
 {
     public event Action OnDamage;
     public event Action OnDeath;
-    //public event Action OnHealth;
+    
     public bool IsDead = false;
 
     public float CurrentHealth { get; private set; }
@@ -23,8 +23,6 @@ public class HealthSystem : MonoBehaviour
         if (change == 0) return false;
 
         CurrentHealth += change;
-        //CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
-        //CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
 
         OnDamage?.Invoke();

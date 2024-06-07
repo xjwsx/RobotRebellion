@@ -21,10 +21,10 @@ public class RangedEnemy : MonoBehaviour
     {
         yield return null;
 
-        while (!RoomCondition.instance.playerInThisRoom)
-        {
-            yield return new WaitForSeconds(0.5f);
-        }
+        //while (!RoomCondition.instance.playerInThisRoom)
+        //{
+        //    yield return new WaitForSeconds(0.5f);
+        //}
 
         yield return new WaitForSeconds(0.5f);
         StartCoroutine(AimAtPlayer());

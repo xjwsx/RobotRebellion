@@ -10,8 +10,6 @@ public class StageManager : Singleton<StageManager>
     {
         public List<Transform> startPosition;
     }
-    public List<GameObject> openDoor;
-    public List<GameObject> closeDoor;
     public List<StageData> normalStages;
     public List<Transform> angelPosition;
     public Transform bossPosition;
@@ -19,7 +17,6 @@ public class StageManager : Singleton<StageManager>
 
     public int currentStage = 0;
     private readonly int lastStage = 20;
-    private int currentRoomIndex = -1;
 
     private HashSet<Transform> visitedPositions = new HashSet<Transform> ();
 
@@ -40,12 +37,10 @@ public class StageManager : Singleton<StageManager>
     {
         if (currentStage == lastStage)
         {
-            currentRoomIndex = openDoor.Count - 1;
             return lastBossPosition;
         }
         if (stage % 10 == 0)
         {
-            currentRoomIndex = openDoor.Count - 2;
             return bossPosition;
         }
         else if (stage % 5 == 0)
@@ -77,40 +72,15 @@ public class StageManager : Singleton<StageManager>
             int randomIndex = Random.Range(0, unvisitedPositions.Count);
             Transform selectedPosition = unvisitedPositions[randomIndex];
             visitedPositions.Add(selectedPosition);
-            currentRoomIndex = positions.IndexOf(selectedPosition);
             return selectedPosition;
         }
         else
         {
-            // All positions have been visited; reset and select randomly
             visitedPositions.Clear();
             int randomIndex = Random.Range(0, positions.Count);
             Transform selectedPosition = positions[randomIndex];
             visitedPositions.Add(selectedPosition);
-            currentRoomIndex = positions.IndexOf(selectedPosition);
             return selectedPosition;
         }
-        //if (positions.Count > 0)
-        //{
-        //    int index = Random.Range(0, positions.Count);
-        //    if(!roomCount.Contains(index))
-        //    {
-        //        roomCount.Add(index);
-        //        currentRoomIndex = index;
-        //        return positions[index];
-        //    }
-        //    else
-        //    {
-        //        int reindex = Random.Range(0, positions.Count);
-        //        return positions[reindex];
-        //    }
-        //}
-        //else { return null; }
     }
-    public void OpenDoor()
-    {
-        closeDoor[currentRoomIndex].SetActive(false);
-        openDoor[currentRoomIndex].SetActive(true);
-    }
-
 }

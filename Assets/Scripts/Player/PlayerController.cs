@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour
     public float currentExp;
     public float maxExp;
     public int level = 1;
+    public float criticalHitProbability = 0.1f;
+    public float criticalHitMultiplier = 2.0f;
+
     private void Awake()
     {
         AnimationData.Initialize();
@@ -41,6 +44,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        Animator.SetFloat("ShotSpeed", 0.7f);
         stateMachine.ChangeState(stateMachine.IdleingState);
         HealthSystem.OnDeath += OnDie;
     }
@@ -128,25 +132,29 @@ public class PlayerController : MonoBehaviour
     {
         switch (skill)
         {
-            case SkillType.BounceAttack:
-                break;
-            case SkillType.PlusBullet:
-                break;
-            case SkillType.DoubleBullet:
-                break;
-            case SkillType.TripleBullet:
-                break;
-            case SkillType.BoundWallBullet:
-                break;
             case SkillType.UpgradeBulletSpeed:
+                IncreaseShotSpeed();
                 break;
             case SkillType.UpgradeBulletDamage:
+                IncreaseBulletDamage();
                 break;
-            case SkillType.BackAttack:
-                break;
-            case SkillType.SideAttack:
+            case SkillType.UpgradeCrit:
+                IncreaseCritDamage();
                 break;
         }
+    }
+    private void IncreaseBulletDamage()
+    {
+        Data.Damage += 10;
+    }
+    private void IncreaseShotSpeed()
+    {
+        float currentSpeed = Animator.GetFloat("ShotSpeed");
+        Animator.SetFloat("ShotSpeed", currentSpeed + 0.2f);
+    }
+    private void IncreaseCritDamage()
+    {
+        criticalHitProbability += 0.1f;
     }
     public void SetUpExp(int exp)
     {

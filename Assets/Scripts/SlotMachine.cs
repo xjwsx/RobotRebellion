@@ -6,11 +6,11 @@ public enum SkillType
 {
     BounceAttack,
     PlusBullet,
-    DoubleBullet,
     TripleBullet,
     BoundWallBullet,
     UpgradeBulletSpeed,
     UpgradeBulletDamage,
+    UpgradeCrit,
     BackAttack,
     SideAttack
 }

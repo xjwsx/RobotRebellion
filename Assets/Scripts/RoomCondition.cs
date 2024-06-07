@@ -2,29 +2,17 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomCondition : Singleton<RoomCondition>
+public class RoomCondition : MonoBehaviour
 {
     public List<GameObject> MonsterListInRoom = new();
     public bool playerInThisRoom = false;
     public bool isClearRoom = false;
-
-    public event Action<bool> OnClearRoom;
-
-    public bool IsClearRoom
+    private GameObject openDoor;
+    private GameObject closeDoor;
+    private void Start()
     {
-        get { return isClearRoom; }
-        set
-        {
-            if(isClearRoom != value)
-            {
-                isClearRoom = value;
-                if(isClearRoom)
-                {
-                    OnClearRoom?.Invoke(value);
-                }
-            }
-
-        }
+        openDoor = transform.GetChild(6).gameObject;
+        closeDoor = transform.GetChild(5).gameObject;
     }
     private void Update()
     {
@@ -58,11 +46,11 @@ public class RoomCondition : Singleton<RoomCondition>
 
     private void CheckRoomClearance()
     {
-        if (!IsClearRoom && GameManager.instance.playerController.PlayerTargeting.MonsterList.Count == 0)
+        if (!isClearRoom && GameManager.instance.playerController.PlayerTargeting.MonsterList.Count == 0)
         {
-            IsClearRoom = true;
-
-            StageManager.instance.OpenDoor();
+            isClearRoom = true;
+            openDoor.SetActive(true);
+            closeDoor.SetActive(false);
         }
     }
 }

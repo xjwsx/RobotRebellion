@@ -18,9 +18,9 @@ public class PlayerController : MonoBehaviour
     public HealthSystem HealthSystem { get; private set; }
     private PlayerStateMachine stateMachine;
     private ObjectPoolManager pool;
-
-    [SerializeField] private Slider expSlider;
-    [SerializeField] private TextMeshProUGUI expText;
+    [SerializeField] private GameObject mainUI;
+    private Slider expSlider;
+    private TextMeshProUGUI expText;
 
     public List<SkillType> Skills { get; private set; } = new List<SkillType>();
     public float currentExp;
@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
         Animator = GetComponent<Animator>();
         HealthSystem = GetComponent<HealthSystem>();
         HealthSystem.SetUp(Data.MaxHp);
+        expSlider = mainUI.GetComponentInChildren<Slider>();
+        expText = mainUI.GetComponentInChildren<TextMeshProUGUI>();
         SetUpExp(Data.Exp);
         stateMachine = new PlayerStateMachine(this);        
     }
@@ -74,7 +76,7 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("Angel"))
         {
             JoystickMovement.instance.Drop();
-            GameManager.instance.SlotMachineOn();
+            StartCoroutine(nameof(ActivateSlotMachineUI));
             other.gameObject.SetActive(false);
         }
     }
@@ -88,6 +90,14 @@ public class PlayerController : MonoBehaviour
             Vector3 CurrentPostion = new Vector3(collision.transform.position.x, collision.transform.position.y + 0.3f, collision.transform.position.z);
             obj.transform.position = CurrentPostion;
             obj.SetActive(true);
+        }
+    }
+    IEnumerator ActivateSlotMachineUI()
+    {
+        var menuTask = UIManager.instance.GetUI<SlotMachine>();
+        while (!menuTask.IsCompleted)
+        {
+            yield return null;
         }
     }
     public void AddExp(float amount)
@@ -107,7 +117,8 @@ public class PlayerController : MonoBehaviour
         maxExp += 50;
         expSlider.maxValue = maxExp;
         level++;
-        GameManager.instance.SlotMachineOn();
+        JoystickMovement.instance.gameObject.SetActive(false);
+        StartCoroutine(nameof(ActivateSlotMachineUI));
     }
     public void LevelUPFx()
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPoolManager : MonoBehaviour
+public class ObjectPoolManager : Singleton<ObjectPoolManager>
 {
     [Serializable]
     public struct Pool
@@ -11,38 +11,8 @@ public class ObjectPoolManager : MonoBehaviour
         public string name;
         public int size;
     }
-    private static ObjectPoolManager instance;
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDict;
-    public static ObjectPoolManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<ObjectPoolManager>();
-                if (instance != null)
-                {
-                    instance.InitializePool();
-                }
-            }
-            return instance;
-        }
-    }
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            InitializePool();
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-
-        DontDestroyOnLoad(gameObject);
-    }
 
     public void InitializePool()
     {

@@ -1,23 +1,17 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class AudioManager : Singleton<AudioManager>
 {
     private GameObject walkSoundObject;
-    private ObjectPoolManager pool;
 
     [SerializeField] private AudioClip bgmStart;
     [SerializeField] private AudioClip bgmInGame;
     [SerializeField] private AudioClip buttonClick;
     //[SerializeField] private AudioClip walk;
     //[SerializeField] private AudioClip attack;
-
-    [SerializeField] private Slider soundEffect;
-    [SerializeField] private Slider backgroundMusic;
-
-    private AudioSource BGM;
+    public AudioSource BGM;
 
     public event Action<bool> OnButtonClick;
     private bool isButtonClick = false;
@@ -34,9 +28,6 @@ public class AudioManager : Singleton<AudioManager>
     protected override void Awake()
     {
         base.Awake();
-
-        pool = GetComponent<ObjectPoolManager>();
-
         BGM = GetComponent<AudioSource>();
         BGM.volume = 0.5f;
         BGM.loop = true;
@@ -46,11 +37,7 @@ public class AudioManager : Singleton<AudioManager>
         PlayGameBgm(bgmStart);
         SceneManager.sceneLoaded += CheckStartScene;
         OnButtonClick += PlayButtonClickSound;
-        if (backgroundMusic != null)
-        {
-            backgroundMusic.onValueChanged.AddListener(delegate { SetBackgroundMusicVolume(); });
-            backgroundMusic.value = BGM.volume;
-        }
+        
     }
     public void CheckStartScene(Scene changed, LoadSceneMode loadSceneMode)
     {
@@ -61,7 +48,6 @@ public class AudioManager : Singleton<AudioManager>
         else if(changed.buildIndex == 3)
         {
             PlayGameBgm(bgmInGame);
-            pool.InitializePool();
         }
     }
     public void PlayGameBgm(AudioClip bgm)
@@ -72,7 +58,7 @@ public class AudioManager : Singleton<AudioManager>
     }
     public void PlayClip(AudioClip clip)
     {
-        GameObject obj = pool.SpawnFromPool("SoundSource");
+        GameObject obj = ObjectPoolManager.instance.SpawnFromPool("SoundSource");
         obj.SetActive(true);
         SoundSource soundSource = obj.GetComponent<SoundSource>();
         soundSource.Play(clip);
@@ -81,7 +67,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (walkSoundObject == null)
         {
-            walkSoundObject = pool.SpawnFromPool("WalkSoundSource");
+            walkSoundObject = ObjectPoolManager.instance.SpawnFromPool("WalkSoundSource");
         }
         walkSoundObject.SetActive(true);
         SoundSource soundSource = walkSoundObject.GetComponent<SoundSource>();
@@ -100,13 +86,6 @@ public class AudioManager : Singleton<AudioManager>
         if (isOn)
         {
             PlayClip(buttonClick);
-        }
-    }
-    private void SetBackgroundMusicVolume()
-    {
-        if (BGM != null && backgroundMusic != null)
-        {
-            BGM.volume = backgroundMusic.value;
         }
     }
 }

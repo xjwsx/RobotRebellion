@@ -1,30 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CameraMovement : MonoBehaviour
+public class CameraMovement : Singleton<CameraMovement>
 {
-    public static CameraMovement instance;
     public GameObject player;
-    public Image fadeInOutImg;
 
     public float offsetY = 45f;
     public float offsetZ = -40f;
 
     Vector3 cameraPosition;
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
-    }
 
     private void LateUpdate()
     {
@@ -35,21 +20,15 @@ public class CameraMovement : MonoBehaviour
     }
     public void MoveXPosition()
     {
-        StartCoroutine(nameof(FadeInOut));
+        StartCoroutine(nameof(ActivateFadeInOutUI));
         cameraPosition.x = player.transform.position.x;
     }
-    IEnumerator FadeInOut()
+    IEnumerator ActivateFadeInOutUI()
     {
-        float a = 1;
-        fadeInOutImg.color = new Vector4(1, 1, 1, a);
-        yield return new WaitForSeconds(0.3f);
-
-        while(a >= 0)
+        var menuTask = UIManager.instance.GetUI<FadeInOut>();
+        while (!menuTask.IsCompleted)
         {
-            fadeInOutImg.color = new Vector4(1, 1, 1, a);
-            a -= 0.02f;
             yield return null;
         }
-
     }
 }

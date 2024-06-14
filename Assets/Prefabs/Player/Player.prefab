@@ -1442,7 +1442,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3538379278532771341}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -3.19}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
@@ -1544,11 +1544,12 @@ MonoBehaviour:
     idleParamaterName: Idle
     walkParamaterName: Run
     attackParamaterName: Shot
-  expSlider: {fileID: 0}
-  expText: {fileID: 0}
+  mainUI: {fileID: 1983156760415065117, guid: e11ec50742756984abd8ac9bddfcd3f8, type: 3}
   currentExp: 0
   maxExp: 0
   level: 1
+  criticalHitProbability: 0.1
+  criticalHitMultiplier: 2
 --- !u!114 &5427125584045235261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1566,8 +1567,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 64
-  MonsterList:
-  - {fileID: 0}
+  MonsterList: []
   bulletSpeed: 10
   attackPoint: {fileID: 5540164243086295139}
 --- !u!114 &3957452055659196285

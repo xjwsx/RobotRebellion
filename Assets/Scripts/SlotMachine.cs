@@ -19,7 +19,7 @@ public class SlotMachine : MonoBehaviour
 {
     public RectTransform skillPanel;
     public GameObject SlotSkillObject;
-    public Button Slot;
+    public Button startButton;
     public Image DisplayResultImage;
 
     public List<Sprite> SkillSprite = new List<Sprite>();
@@ -29,6 +29,10 @@ public class SlotMachine : MonoBehaviour
     private void OnEnable()
     {
         InitializeSlots();
+    }
+    private void Start()
+    {
+        startButton.onClick.AddListener(StartButton);
     }
     void InitializeSlots()
     {
@@ -98,7 +102,7 @@ public class SlotMachine : MonoBehaviour
         GameManager.instance.PauseUI.ChangeImage(DisplayResultImage);
 
         yield return new WaitForSeconds(2f);
-        GameManager.instance.joystickCanvasUI.SetActive(true);
+        JoystickMovement.instance.gameObject.SetActive(true);
         gameObject.SetActive(false);
         DisplayResultImage.enabled = false;
     }

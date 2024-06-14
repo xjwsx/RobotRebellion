@@ -1,27 +1,18 @@
+using System.Collections;
 using UnityEngine;
 
 public class StartScene : MonoBehaviour
 {
-    [SerializeField] private GameObject optionUI;
-    [SerializeField] private AudioSource audioSource;
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        StartCoroutine(nameof(ActivateMenuUI));
     }
-
-    public void OpenOptionUI()
+    IEnumerator ActivateMenuUI()
     {
-        audioSource.Play();
-        optionUI.SetActive(true);
-    }
-    public void OnLoadMainScene()
-    {
-        audioSource.Play();
-        LoadingSceneController.LoadScene("MainScene");
-    }
-    public void CloseButton()
-    {
-        audioSource.Play();
-        optionUI.SetActive(false);
+        var menuTask = UIManager.instance.GetUI<Menu>();
+        while (!menuTask.IsCompleted)
+        {
+            yield return null;
+        }
     }
 }

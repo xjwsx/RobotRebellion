@@ -1,32 +1,23 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>   
 {
-    public GameObject joystickCanvasUI;
-    public PauseUI PauseUI;
-    public GameObject slotMachineUI;
+    public Pause PauseUI;
     public PlayerController playerController;
     public EnemyController enemyController;
-
-    public void PauseButton()
+    protected override void Awake()
     {
-        //AudioManager.instance.IsButtonClick = true;
-        Time.timeScale = 0f;
-        PauseUI.gameObject.SetActive(true);
-        PauseUI.ActiveButtons();
-        joystickCanvasUI.SetActive(false);
+        base.Awake();
+        ObjectPoolManager.instance.InitializePool();
+        StartCoroutine(nameof(ActivateMainUI));
     }
-    public void PlayButton()
+    IEnumerator ActivateMainUI()
     {
-        //AudioManager.instance.IsButtonClick = true;
-        Time.timeScale = 1f;
-        PauseUI.gameObject.SetActive(false);
-        joystickCanvasUI.SetActive(true);
-    }
-    public void SlotMachineOn()
-    {
-        //AudioManager.instance.IsButtonClick = true;
-        slotMachineUI.SetActive(true);
-        joystickCanvasUI.SetActive(false);
+        var menuTask = UIManager.instance.GetUI<Main>();
+        while (!menuTask.IsCompleted)
+        {
+            yield return null;
+        }
     }
 }

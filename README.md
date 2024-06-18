@@ -45,8 +45,3 @@
 
 </br>
 
-## 🔗 Link
-- <a href="https://youtu.be/aJVeV60igHc?si=Ex1p-ol0XqnZA0O2">게임 플레이 영상</a>
-
-</br>
-

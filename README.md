@@ -28,15 +28,20 @@
 
 ## 📌 주요 기능
 ### FSM Pattern
-- 
+- Player, Monster의 상태를 관리하는 기능입니다.
 ### Async_await
-- 
+- Scene을 비동기로 로드 하는 기능입니다.
 ### Addressables
-- 
+- 리소스들을 효율적으로 관리하는 기능입니다.
 ### ObjectPooling
-- 
+- 지속적으로 생성되고 파괴가 필요한 오브젝트들의 오버헤드를 방지하기 위한 기능입니다.
 ### ScriptableObject
-- 
+- 여러 객체가 데이터를 복제하지 않고도 동일한 'SO'를 참조하게 함으로 메모리의 효율성을 높이는 기능입니다.
+### UI System
+- 많아지는 UI들을 인스펙터 창에서 모두 연결해 주어야 하는 번거로움을 줄이고자 UI를 동적으로 생성하는 기능입니다. 
+- UI의 순서를 Stack과 sortingOrder값으로 조정하는 기능입니다.
+### Singleton
+- Monobehaviour를 상속받은 Singleton을 사용하여 Singleton<T>을 상속받는 하위 클래스는 모두 Singleton을 사용할 수 있게 구현했습니다.
 
 </br>
 
